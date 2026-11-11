@@ -75,7 +75,7 @@ const SOCIAL = {
   facebook: "https://www.facebook.com/yourpage"
 };
 // Paste your Google Sheet "Publish to web" CSV link between the quotes.
-// While it is empty, the page shows demo products so you can see the design.
+// Keep this filled in on the file you upload, or no products will show.
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTnl1LxyqDqhMBfKa76VRWvMWLJjhK9suwAjq1YVKqFtAexm56Uxd53K4cWiEecnxIdJmNW84ANV-j6/pub?output=csv";
 
 // No sheet? Add products here instead, one line each, newest at the bottom.
@@ -112,14 +112,11 @@ function fixImg(u) {
   return m ? "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1000" : u;
 }
 
-function demo() {
-  const ph = (n, c) => "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><rect width='600' height='600' fill='" + c + "'/><text x='300' y='345' font-size='170' text-anchor='middle' fill='#3b3550' font-family='sans-serif'>" + n + "</text></svg>");
-  const cols = ["#e6dcfa", "#d4f1e4", "#ffe3d3", "#fbdbe8", "#dbeafe", "#fef3c7"];
-  return cols.map((c, i) => ({ num: String(i + 1), img: ph(i + 1, c), link: "#", cat: i < 3 ? "Kitchen" : "Home" }));
-}
-
 async function load() {
-  if (!SHEET_CSV_URL.trim()) return PRODUCTS.length ? PRODUCTS : demo();
+  if (!SHEET_CSV_URL.trim()) {
+    if (PRODUCTS.length) return PRODUCTS;
+    throw new Error("no sheet link is set in this file yet. Paste it into SHEET_CSV_URL and upload the file again");
+  }
   const url = SHEET_CSV_URL.trim().replace("/pubhtml", "/pub?output=csv");
   if (!/output=csv|format=csv/.test(url)) throw new Error("the link must end with output=csv, so publish the sheet as CSV");
   let res;
