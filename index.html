@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Deal Discovery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f2fc;--card:#fff;--ink:#3b3550;--mute:#857f9b;--line:#e8e1f5;--acc:#cbbcf0;--c2:#d4f1e4;--c3:#ffe3d3;--sh:0 8px 24px rgba(150,130,200,.16)}
+@media(prefers-color-scheme:dark){:root{--bg:#1e1a2a;--card:#2c2740;--ink:#f2eefb;--mute:#aaa3c2;--line:#443d5a;--acc:#b9a6ec;--c2:#2f5547;--c3:#6a4a3c;--sh:0 8px 24px rgba(0,0,0,.35)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Quicksand",ui-rounded,"Segoe UI",system-ui,sans-serif;min-height:100vh}
+.top{display:flex;align-items:center;gap:12px;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px;position:sticky;top:0;z-index:5}
+.logo{width:42px;height:42px;border-radius:12px;background:var(--acc);display:grid;place-items:center;font-size:22px;flex:none}
+.ttl{flex:1;min-width:0}
+h1{font-size:19px;margin:0;line-height:1.2}
+small,.mute{color:var(--mute)}
+.pill{font-size:12px;font-weight:700;background:var(--c2);padding:4px 12px;border-radius:999px;white-space:nowrap}
+main{max-width:900px;margin:0 auto;padding:20px 14px 48px}
+input{width:100%;font:inherit;padding:12px 18px;border:1.5px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);box-shadow:var(--sh);margin-bottom:16px}
+:focus-visible{outline:3px solid #7d6bc4;outline-offset:2px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font:inherit;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font-weight:700;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(min-width:760px){.grid{grid-template-columns:repeat(3,1fr);gap:18px}}
+.shot{display:block;position:relative;aspect-ratio:1/1;background:#fff;border:1.5px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--sh)}
+.shot img{width:100%;height:100%;object-fit:contain;display:block}
+.num{position:absolute;left:10px;top:10px;background:var(--c3);color:#3b3550;font-weight:700;font-size:14px;padding:3px 12px;border-radius:999px}
+.social{display:flex;justify-content:center;gap:14px;margin:0 0 18px}
+.soc{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;box-shadow:var(--sh);transition:transform .2s}
+.soc:hover{transform:translateY(-3px)}
+.soc svg{width:26px;height:26px}
+.soc[hidden]{display:none}
+@media(prefers-reduced-motion:reduce){.soc{transition:none}}
+.hint{text-align:center;font-weight:700;font-size:15px;margin:0 0 12px}
+.links{display:flex;justify-content:center;gap:18px;margin-bottom:10px;font-weight:700}
+.links a{color:var(--ink)}
+footer p{margin:0}
+#msg{text-align:center;padding:40px 0}
+footer{margin-top:28px;font-size:12px;color:var(--mute);text-align:center}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo">🏷️</div>
+  <div class="ttl"><h1 id="title"></h1><small>Fresh finds, one tap away</small></div>
+  <span class="pill" id="count"></span>
+</header>
+<main>
+  <nav class="social" aria-label="Our pages">
+    <a class="soc" id="sIg" target="_blank" rel="noopener" aria-label="Instagram" style="background:linear-gradient(45deg,#f9a03c,#e1306c,#833ab4)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff"/></svg></a>
+    <a class="soc" id="sYt" target="_blank" rel="noopener" aria-label="YouTube" style="background:#ff0000"><svg viewBox="0 0 24 24"><path fill="#fff" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.4-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg></a>
+    <a class="soc" id="sFb" target="_blank" rel="noopener" aria-label="Facebook" style="background:#1877f2"><svg viewBox="0 0 24 24"><path fill="#fff" d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H8v3h2.5V21h3z"/></svg></a>
+  </nav>
+  <p class="hint">🔎 Search the product number to get your product</p>
+  <input id="q" type="search" placeholder="Search product number" inputmode="numeric" aria-label="Search product number">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+  <p id="msg" class="mute">Loading deals…</p>
+  <footer>
+    <div class="links"><a href="privacy.html">Privacy Policy</a><a href="contact.html">Contact</a></div>
+    <p>Some links on this page are affiliate links. We may earn a commission if you buy through them.</p>
+  </footer>
+</main>
+
+<script>
+/* ===== SETTINGS ===== */
+const TITLE = "Daily Deal Discovery";
+// Your social pages. Replace with your own links (leave "" to hide an icon).
+const SOCIAL = {
+  instagram: "https://www.instagram.com/yourpage",
+  youtube: "https://www.youtube.com/@yourchannel",
+  facebook: "https://www.facebook.com/yourpage"
+};
+// Paste your Google Sheet "Publish to web" CSV link between the quotes.
+// While it is empty, the page shows demo products so you can see the design.
+const SHEET_CSV_URL = "";
+
+// No sheet? Add products here instead, one line each, newest at the bottom.
+// Example: { num: "1", img: "images/1.jpg", link: "https://amzn.to/xxxx", cat: "Kitchen" },
+const PRODUCTS = [
+];
+/* ==================== */
+
+const $ = id => document.getElementById(id);
+let items = [], cat = "", q = "";
+$("title").textContent = TITLE;
+[["sIg", SOCIAL.instagram], ["sYt", SOCIAL.youtube], ["sFb", SOCIAL.facebook]].forEach(([id, url]) => {
+  const a = $(id);
+  if (/^https?:\/\//i.test(url)) a.href = url; else a.hidden = true;
+});
+
+function parseCSV(t) {
+  const rows = []; let row = [], f = "", inQ = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (inQ) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else inQ = false; } else f += c; }
+    else if (c === '"') inQ = true;
+    else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && t[i + 1] === "\n") i++; row.push(f); rows.push(row); row = []; f = ""; }
+    else f += c;
+  }
+  if (f || row.length) { row.push(f); rows.push(row); }
+  return rows.filter(r => r.some(x => x.trim()));
+}
+
+// Google Drive share links -> direct image
+function fixImg(u) {
+  const m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=view&)?id=)([\w-]+)/);
+  return m ? "https://drive.google.com/thumbnail?id=" + m[1] + "&sz=w1000" : u;
+}
+
+function demo() {
+  const ph = (n, c) => "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><rect width='600' height='600' fill='" + c + "'/><text x='300' y='345' font-size='170' text-anchor='middle' fill='#3b3550' font-family='sans-serif'>" + n + "</text></svg>");
+  const cols = ["#e6dcfa", "#d4f1e4", "#ffe3d3", "#fbdbe8", "#dbeafe", "#fef3c7"];
+  return cols.map((c, i) => ({ num: String(i + 1), img: ph(i + 1, c), link: "#", cat: i < 3 ? "Kitchen" : "Home" }));
+}
+
+async function load() {
+  if (!SHEET_CSV_URL.trim()) return PRODUCTS.length ? PRODUCTS : demo();
+  const url = SHEET_CSV_URL.trim().replace("/pubhtml", "/pub?output=csv");
+  if (!/output=csv|format=csv/.test(url)) throw new Error("the link must end with output=csv, so publish the sheet as CSV");
+  let res;
+  try { res = await fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now()); }
+  catch (e) { throw new Error("the browser could not reach the sheet. Open the link in a new tab to test it"); }
+  if (!res.ok) throw new Error("Google answered with error " + res.status);
+  const text = await res.text();
+  if (/^\s*</.test(text)) throw new Error("the link opened a web page, not CSV. Publish as Comma-separated values (.csv)");
+  const rows = parseCSV(text);
+  if (!rows.length) throw new Error("the sheet is empty");
+  const head = rows[0].map(x => x.trim().toLowerCase());
+  const hasHead = head.some(x => /number|image|link|categor/.test(x));
+  const ix = k => { const i = head.findIndex(x => x.includes(k)); return hasHead && i > -1 ? i : -1; };
+  const [n, im, l, c] = [ix("number"), ix("image"), ix("link"), ix("categor")];
+  const out = (hasHead ? rows.slice(1) : rows).map(r => ({
+    num: (r[n > -1 ? n : 0] || "").trim(),
+    img: fixImg((r[im > -1 ? im : 1] || "").trim()),
+    link: (r[l > -1 ? l : 2] || "").trim(),
+    cat: (r[c > -1 ? c : 3] || "").trim()
+  })).filter(p => p.num && p.img);
+  if (!out.length) throw new Error("no rows found. Row 1 needs the headings number, image, link, category");
+  return out;
+}
+
+function draw() {
+  const list = items.filter(p => (!cat || p.cat === cat) && (!q || p.num === q));
+  $("grid").replaceChildren(...list.map(p => {
+    const a = document.createElement("a");
+    a.className = "shot"; a.target = "_blank"; a.rel = "noopener sponsored";
+    a.href = /^https?:\/\//i.test(p.link) ? p.link : "#";
+    a.setAttribute("aria-label", "Open product " + p.num);
+    const im = document.createElement("img");
+    im.src = p.img; im.alt = "Product " + p.num; im.loading = "lazy";
+    const s = document.createElement("span"); s.className = "num"; s.textContent = p.num;
+    a.append(im, s);
+    return a;
+  }));
+  $("msg").hidden = list.length > 0;
+  $("msg").textContent = items.length ? "No product found with that number." : "New deals are coming soon.";
+}
+
+function chips() {
+  const cats = [...new Set(items.map(p => p.cat).filter(Boolean))];
+  $("chips").replaceChildren(...(cats.length ? ["", ...cats] : []).map(c => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = c || "All";
+    b.setAttribute("aria-pressed", String(cat === c));
+    b.onclick = () => { cat = c; chips(); draw(); };
+    return b;
+  }));
+}
+
+$("q").addEventListener("input", e => { q = e.target.value.trim(); draw(); });
+
+load().then(list => {
+  items = list; $("count").textContent = items.length + " products"; chips(); draw();
+}).catch(e => {
+  $("msg").hidden = false;
+  $("msg").textContent = "Couldn’t load the deals: " + ((e && e.message) || "unknown problem") + ".";
+});
+</script>
+</body>
+</html>

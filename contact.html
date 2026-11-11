@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact · Daily Deal Discovery</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f2fc;--card:#fff;--ink:#3b3550;--mute:#857f9b;--line:#e8e1f5;--acc:#cbbcf0}
+@media(prefers-color-scheme:dark){:root{--bg:#1e1a2a;--card:#2c2740;--ink:#f2eefb;--mute:#aaa3c2;--line:#443d5a;--acc:#b9a6ec}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Quicksand",ui-rounded,"Segoe UI",system-ui,sans-serif;line-height:1.65}
+.top{display:flex;align-items:center;gap:12px;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px}
+.logo{width:42px;height:42px;border-radius:12px;background:var(--acc);display:grid;place-items:center;font-size:22px}
+.top b{font-size:19px}
+main{max-width:720px;margin:0 auto;padding:24px 16px 56px}
+article{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:24px}
+h1{margin:0 0 8px;font-size:26px}
+.mute{color:var(--mute)}
+a{color:var(--ink)}
+.back{display:inline-block;margin-bottom:14px;font-weight:700}
+.row{display:flex;flex-direction:column;gap:2px;padding:14px 0;border-top:1px solid var(--line)}
+.row span{font-size:13px;color:var(--mute);font-weight:700}
+.row a,.row b{font-size:17px}
+</style>
+</head>
+<body>
+<header class="top"><div class="logo">🏷️</div><b>Daily Deal Discovery</b></header>
+<main>
+<a class="back" href="index.html">← Back to deals</a>
+<article>
+  <h1>Contact</h1>
+  <p class="mute">Questions, product requests or feedback? We’d love to hear from you.</p>
+
+  <!-- Replace the details below with your own -->
+  <div class="row"><span>Email</span><a href="mailto:you@example.com">you@example.com</a></div>
+  <div class="row"><span>Instagram</span><a href="https://www.instagram.com/yourpage" target="_blank" rel="noopener">@yourpage</a></div>
+  <div class="row"><span>YouTube</span><a href="https://www.youtube.com/@yourchannel" target="_blank" rel="noopener">@yourchannel</a></div>
+  <div class="row"><span>Facebook</span><a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener">Your Page</a></div>
+
+  <p class="mute">We usually reply within a few days. For how we handle your information, see our <a href="privacy.html">Privacy Policy</a>.</p>
+</article>
+</main>
+</body>
+</html>
